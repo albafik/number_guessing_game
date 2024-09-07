@@ -13,10 +13,9 @@ ATTEMPS=1
 echo $NUM_RANDOM
 #!/bin/bash
 
-# Si no se encuentra información previa del jugador
-if [[ -z $GET_GAMERINFO ]]
-then
-  echo "Welcome, $USERNAME! It looks like this is your first time here."
+
+#NEW_GAME
+START_GAME(){
   INSERT_NEW_PLAYER=$($PSQL "INSERT INTO players(username) VALUES('$USERNAME');")
   echo "Guess the secret number between 1 and 1000:"
   read SECRET_NUMBER
@@ -40,6 +39,14 @@ then
   PLAYER_ID=$($PSQL "SELECT player_id FROM Players WHERE username = '$USERNAME';")
   INSERT_NEW_GAME=$($PSQL "INSERT INTO games(guesses, player_id) VALUES ($ATTEMPS, $PLAYER_ID);")
   echo "You guessed it in $ATTEMPS tries. The secret number was $SECRET_NUMBER. Nice job!"
+}
+
+
+# START PROGRAM
+if [[ -z $GET_GAMERINFO ]]
+then
+  echo "Welcome, $USERNAME! It looks like this is your first time here."
+  START_GAME
 else
   echo "$GET_GAMERINFO" | while IFS="|" read NAME BEST_GAME GAMES_PLAYED
   do
@@ -48,4 +55,5 @@ else
     N_GAMES_FORMATTED=$(echo $GAMES_PLAYED | sed -E 's/^ *| *$//')
     echo "Welcome back, $NAME_FORMATTED! You have played $N_GAMES_FORMATTED games, and your best game took $BEST_FORMATTED guesses."
   done
+  START_GAME
 fi
