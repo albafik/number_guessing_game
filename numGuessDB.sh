@@ -8,3 +8,4 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -c"
 # FOREIGN_KEY=$($PSQL "ALTER TABLE games ADD FOREIGN KEY(player_id) REFERENCES players(player_id);")
 #UNIQUE_NAME=$($PSQL "ALTER TABLE players ADD CONSTRAINT unique_name UNIQUE(username);")
 
+BACKUP=$("pg_dump -cC --inserts -U freecodecamp number_guess > number_guess.sql")
